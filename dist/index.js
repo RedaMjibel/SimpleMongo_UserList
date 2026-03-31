@@ -113,10 +113,16 @@ function PrintUsers() {
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         yield connectDB();
-        yield promptUser();
-        yield PrintUsers();
+        while (true) {
+            yield promptUser();
+            yield PrintUsers();
+            const input = yield question("Press ENTER to continue or type 'exit': ");
+            if (input.toLowerCase() === "exit")
+                break;
+        }
+        yield mongoose.connection.close();
         rl.close();
-        process.exit();
+        process.exit(0);
     });
 }
 main();

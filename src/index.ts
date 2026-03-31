@@ -125,12 +125,18 @@ async function PrintUsers(): Promise<void> {
 async function main() {
   await connectDB();
 
-  await promptUser();
+  while (true) {
+    await promptUser();
+    await PrintUsers();
 
-  await PrintUsers();
+    const input = await question("Press ENTER to continue or type 'exit': ");
 
+    if (input.toLowerCase() === "exit") break;
+  }
+
+  await mongoose.connection.close();
   rl.close();
-  process.exit();
+  process.exit(0);
 }
 
 main();
