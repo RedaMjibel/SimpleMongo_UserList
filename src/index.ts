@@ -8,7 +8,9 @@ type User = {
     id: number;
     name: string;
     age: number;
+    status: string;
 };
+let option: string = "";
 
 async function connectDB() {
   try {
@@ -22,66 +24,113 @@ async function connectDB() {
   const userSchema = new mongoose.Schema({
   name: String,
   age: Number,
+  status: String
 });
 
 const UserModel = mongoose.model("User", userSchema);
 
-async function addUser(user: User): Promise<void> {
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+function question(query: string): Promise<string> {
+  return new Promise((resolve) => rl.question(query, resolve));
+}
+
+async function addUser(): Promise<void> {
+  let name: string = "";
+
+  do {
+    name = await question("Enter user name: ");
+    if (!name.trim()) {
+      console.log("Name cannot be empty.");
+    }
+  } while (!name.trim());
+
+  let age: number = 0;
+
+  do {
+    const ageInput = await question("Enter user age: ");
+    age = parseInt(ageInput);
+
+    if (isNaN(age) || age <= 0) {
+      console.log("Invalid age. Enter a positive number.");
+    }
+  } while (isNaN(age) || age <= 0);
+
+  let status: string;
+  if (age <= 25) status = "young";
+  else if (age <= 60) status = "old";
+  else status = "senior";
+
   await UserModel.create({
-    name: user.name,
-    age: user.age,
+    name,
+    age,
+    status,
   });
+
+  console.log("User created successfully!");
+}
+
+async function deleteUser(): Promise<void> {
+  let userId: string = "";
+
+  do {
+    userId = await question("Enter user ID to delete: ");
+    if (!userId.trim()) {
+      console.log("User ID cannot be empty.");
+    }
+  } while (!userId.trim());
+
+  await UserModel.findByIdAndDelete(userId);
+
+  console.log("User deleted successfully!");
+}
+
+async function promptUser(): Promise<void> {
+  let option = "";
+
+  do {
+    option = await question("1 to create user, 2 to delete user: ");
+
+    if (option !== "1" && option !== "2") {
+      console.log("Wrong option. Please enter 1 or 2.");
+    }
+  } while (option !== "1" && option !== "2");
+
+  if (option === "1") {
+    await addUser();
+  } else {
+    await deleteUser();
+  }
 }
 
 async function PrintUsers(): Promise<void> {
-  const users = await UserModel.find();
+  try {
+    const users = await UserModel.find();
 
-  console.log("Current Users:");
-  users.forEach((user) => {
-    console.log(`ID: ${user._id}, Name: ${user.name}, Age: ${user.age}`);
-  });
-}
+    console.log("Current Users:");
 
-function promptUser(): Promise<User> {
-    return new Promise(async (resolve) => {
-        const rl = readline.createInterface({
-            input: process.stdin,
-            output: process.stdout,
-        });
-
-        let name: string;
-        do {
-            name = await new Promise<string>((resolveName) => {
-                rl.question("Enter user name: ", resolveName);
-            });
-            if (!name.trim()) {
-                console.log("Name cannot be empty. Please enter a valid name.");
-            }
-        } while (!name.trim());
-
-        let age: number;
-        do {
-            const ageInput = await new Promise<string>((resolveAge) => {
-                rl.question("Enter user age: ", resolveAge);
-            });
-            age = parseInt(ageInput);
-            if (isNaN(age) || age <= 0) {
-                console.log("Invalid age input. Please enter a positive number.");
-            }
-        } while (isNaN(age) || age <= 0);
-
-        rl.close();
-        resolve({ id: 0, name, age });
+    users.forEach((user) => {
+      console.log(
+        `ID: ${user._id}, Name: ${user.name}, Age: ${user.age}, Status: ${user.status}`
+      );
     });
+  } catch (err) {
+    console.error("Error fetching users:", err);
+  }
 }
 
 async function main() {
-    await connectDB();
-    const newUser = await promptUser();
-    await addUser(newUser);
-    console.log("User added!");
-    await PrintUsers();
-    process.exit();
+  await connectDB();
+
+  await promptUser();
+
+  await PrintUsers();
+
+  rl.close();
+  process.exit();
 }
 
 main();

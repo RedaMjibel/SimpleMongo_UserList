@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import mongoose from "mongoose";
 import readline from "readline";
+let option = "";
 function connectDB() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -23,67 +24,98 @@ function connectDB() {
 const userSchema = new mongoose.Schema({
     name: String,
     age: Number,
+    status: String
 });
 const UserModel = mongoose.model("User", userSchema);
-const users = [
-    { id: 1, name: "Alice", age: 30 },
-    { id: 2, name: "Bob", age: 25 },
-    { id: 3, name: "Charlie", age: 35 },
-];
-function addUser(user) {
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+});
+function question(query) {
+    return new Promise((resolve) => rl.question(query, resolve));
+}
+function addUser() {
     return __awaiter(this, void 0, void 0, function* () {
+        let name = "";
+        do {
+            name = yield question("Enter user name: ");
+            if (!name.trim()) {
+                console.log("Name cannot be empty.");
+            }
+        } while (!name.trim());
+        let age = 0;
+        do {
+            const ageInput = yield question("Enter user age: ");
+            age = parseInt(ageInput);
+            if (isNaN(age) || age <= 0) {
+                console.log("Invalid age. Enter a positive number.");
+            }
+        } while (isNaN(age) || age <= 0);
+        let status;
+        if (age <= 25)
+            status = "young";
+        else if (age <= 60)
+            status = "old";
+        else
+            status = "senior";
         yield UserModel.create({
-            name: user.name,
-            age: user.age,
+            name,
+            age,
+            status,
         });
+        console.log("User created successfully!");
+    });
+}
+function deleteUser() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let userId = "";
+        do {
+            userId = yield question("Enter user ID to delete: ");
+            if (!userId.trim()) {
+                console.log("User ID cannot be empty.");
+            }
+        } while (!userId.trim());
+        yield UserModel.findByIdAndDelete(userId);
+        console.log("User deleted successfully!");
+    });
+}
+function promptUser() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let option = "";
+        do {
+            option = yield question("1 to create user, 2 to delete user: ");
+            if (option !== "1" && option !== "2") {
+                console.log("Wrong option. Please enter 1 or 2.");
+            }
+        } while (option !== "1" && option !== "2");
+        if (option === "1") {
+            yield addUser();
+        }
+        else {
+            yield deleteUser();
+        }
     });
 }
 function PrintUsers() {
     return __awaiter(this, void 0, void 0, function* () {
-        const users = yield UserModel.find();
-        console.log("Current Users:");
-        users.forEach((user) => {
-            console.log(`ID: ${user._id}, Name: ${user.name}, Age: ${user.age}`);
-        });
+        try {
+            const users = yield UserModel.find();
+            console.log("Current Users:");
+            users.forEach((user) => {
+                console.log(`ID: ${user._id}, Name: ${user.name}, Age: ${user.age}, Status: ${user.status}`);
+            });
+        }
+        catch (err) {
+            console.error("Error fetching users:", err);
+        }
     });
 }
-function promptUser() {
-    return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
-        const rl = readline.createInterface({
-            input: process.stdin,
-            output: process.stdout,
-        });
-        let name;
-        do {
-            name = yield new Promise((resolveName) => {
-                rl.question("Enter user name: ", resolveName);
-            });
-            if (!name.trim()) {
-                console.log("Name cannot be empty. Please enter a valid name.");
-            }
-        } while (!name.trim());
-        let age;
-        do {
-            const ageInput = yield new Promise((resolveAge) => {
-                rl.question("Enter user age: ", resolveAge);
-            });
-            age = parseInt(ageInput);
-            if (isNaN(age) || age <= 0) {
-                console.log("Invalid age input. Please enter a positive number.");
-            }
-        } while (isNaN(age) || age <= 0);
-        rl.close();
-        resolve({ id: 0, name, age });
-    }));
-}
-// Main execution
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         yield connectDB();
-        const newUser = yield promptUser();
-        yield addUser(newUser);
-        console.log("User added!");
+        yield promptUser();
         yield PrintUsers();
+        rl.close();
         process.exit();
     });
 }
