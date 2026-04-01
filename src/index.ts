@@ -49,21 +49,22 @@ async function addUser(): Promise<void> {
   } while (!name.trim());
 
   let age: number = 0;
+  let status: string = "";
 
   do {
     const ageInput = await question("Enter user age: ");
     age = parseInt(ageInput);
 
-    if (isNaN(age) || age <= 0) {
-      console.log("Invalid age. Enter a positive number.");
+    if (isNaN(age) || age <= 0 || age >= 150) {
+      console.log("Invalid age. Enter a positive number between 1 and 149.");
     }
-  } while (isNaN(age) || age <= 0);
+  } while (isNaN(age) || age <= 0 || age >= 150);
 
-  let status: string;
+
 
   if (age <= 25) status = "young";
-  else if (age <= 60) status = "old";
-  else status = "senior";
+  else if (age <= 60 ) status = "old";
+  else if (age < 150 && age >= 61) status = "senior";
 
   await UserModel.create({
     name,

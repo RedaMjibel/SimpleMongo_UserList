@@ -44,19 +44,19 @@ function addUser() {
             }
         } while (!name.trim());
         let age = 0;
+        let status = "";
         do {
             const ageInput = yield question("Enter user age: ");
             age = parseInt(ageInput);
-            if (isNaN(age) || age <= 0) {
-                console.log("Invalid age. Enter a positive number.");
+            if (isNaN(age) || age <= 0 || age >= 150) {
+                console.log("Invalid age. Enter a positive number between 1 and 149.");
             }
-        } while (isNaN(age) || age <= 0);
-        let status;
+        } while (isNaN(age) || age <= 0 || age >= 150);
         if (age <= 25)
             status = "young";
         else if (age <= 60)
             status = "old";
-        else
+        else if (age < 150 && age >= 61)
             status = "senior";
         yield UserModel.create({
             name,
@@ -125,12 +125,12 @@ function setupGlobalExit() {
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         yield connectDB();
-        setupGlobalExit(); // 🔥 ESC works anytime
+        setupGlobalExit();
         while (true) {
             yield promptUser();
             yield PrintUsers();
             console.log("\nPress ENTER to continue or ESC anytime to exit...");
-            yield question(""); // just wait for Enter
+            yield question("");
         }
     });
 }
