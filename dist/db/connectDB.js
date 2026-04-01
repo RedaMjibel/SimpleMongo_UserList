@@ -7,22 +7,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { connectDB } from "./db/connectDB.js";
-import { setupGlobalExit } from "./cli/exit.js";
-import { promptUser } from "./cli/prompt.js";
-import { printUsers } from "./ui/printUsers.js";
-import { question } from "./cli/input.js";
-function main() {
+import mongoose from "mongoose";
+export function connectDB() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield connectDB();
-        setupGlobalExit();
-        while (true) {
-            yield promptUser();
-            yield printUsers();
-            console.log("\nPress ENTER to continue or ESC anytime to exit...");
-            yield question("");
-        }
+        yield mongoose.connect("mongodb://127.0.0.1:27017/testDB");
+        console.log("Connected to MongoDB");
     });
 }
-main();
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=connectDB.js.map

@@ -7,22 +7,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { connectDB } from "./db/connectDB.js";
-import { setupGlobalExit } from "./cli/exit.js";
-import { promptUser } from "./cli/prompt.js";
-import { printUsers } from "./ui/printUsers.js";
-import { question } from "./cli/input.js";
-function main() {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield connectDB();
-        setupGlobalExit();
-        while (true) {
-            yield promptUser();
-            yield printUsers();
-            console.log("\nPress ENTER to continue or ESC anytime to exit...");
-            yield question("");
+import mongoose from "mongoose";
+import { rl } from "./input.js";
+export function setupGlobalExit() {
+    process.stdin.setRawMode(true);
+    process.stdin.resume();
+    process.stdin.on("data", (key) => __awaiter(this, void 0, void 0, function* () {
+        if (key[0] === 27) {
+            console.log("\nClosing connection...");
+            yield mongoose.connection.close();
+            rl.close();
+            process.exit(0);
         }
-    });
+    }));
 }
-main();
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=exit.js.map

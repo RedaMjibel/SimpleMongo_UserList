@@ -7,22 +7,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { connectDB } from "./db/connectDB.js";
-import { setupGlobalExit } from "./cli/exit.js";
-import { promptUser } from "./cli/prompt.js";
-import { printUsers } from "./ui/printUsers.js";
-import { question } from "./cli/input.js";
-function main() {
+import { UserModel } from "../db/userModel.js";
+export function printUsers() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield connectDB();
-        setupGlobalExit();
-        while (true) {
-            yield promptUser();
-            yield printUsers();
-            console.log("\nPress ENTER to continue or ESC anytime to exit...");
-            yield question("");
-        }
+        const users = yield UserModel.find();
+        console.log("Current Users:");
+        users.forEach((u) => {
+            console.log(`ID: ${u._id}, Name: ${u.name}, Age: ${u.age}, Status: ${u.status}`);
+        });
     });
 }
-main();
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=printUsers.js.map
