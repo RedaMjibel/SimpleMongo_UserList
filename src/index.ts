@@ -11,7 +11,6 @@ async function main() {
 
   while (true) {
     await promptUser();
-    await printUsers();
 
     console.log("\nPress ENTER to continue or ESC anytime to exit...");
     await question("");

@@ -63,4 +63,45 @@ export function deleteUser() {
         return deletedUser !== null;
     });
 }
+export function updateUser() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let name = "";
+        let error;
+        while (true) {
+            name = yield question("Enter username: ");
+            error = validateName(name);
+            if (error) {
+                console.log(error);
+                continue;
+            }
+            break;
+        }
+        let updatedName = "";
+        while (true) {
+            updatedName = yield question("Enter new username: ");
+            error = validateName(updatedName);
+            if (error) {
+                console.log(error);
+                continue;
+            }
+            break;
+        }
+        let updatedAge = 0;
+        while (true) {
+            const updatedAgeInput = yield question("Enter new user age: ");
+            updatedAge = parseInt(updatedAgeInput);
+            if (isNaN(updatedAge) || updatedAge <= 0 || updatedAge >= 150) {
+                console.log("Invalid age. Enter a number between 1 and 149.");
+                continue;
+            }
+            break;
+        }
+        const updatedUser = yield UserModel.findOneAndUpdate({ name }, { name: updatedName, age: updatedAge }, { returnDocument: "after" });
+        if (!updatedUser) {
+            return false;
+        }
+        console.log("User updated!\n");
+        return true;
+    });
+}
 //# sourceMappingURL=userService.js.map

@@ -18,7 +18,6 @@ function main() {
         setupGlobalExit();
         while (true) {
             yield promptUser();
-            yield printUsers();
             console.log("\nPress ENTER to continue or ESC anytime to exit...");
             yield question("");
         }

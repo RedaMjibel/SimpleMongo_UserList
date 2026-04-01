@@ -8,17 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { question } from "./input.js";
-import { addUser, deleteUser } from "../services/userService.js";
+import { addUser, deleteUser, updateUser } from "../services/userService.js";
 import { printUsers } from "../ui/printUsers.js";
 export function promptUser() {
     return __awaiter(this, void 0, void 0, function* () {
         let option = "";
         do {
-            option = yield question("1 to create user, 2 to delete user, 3 to print users: ");
-            if (option !== "1" && option !== "2" && option !== "3") {
-                console.log("Wrong option. Please enter 1, 2 or 3.");
+            option = yield question("1 to create user, 2 to delete user, 3 to update users, 4 to print users: ");
+            if (option !== "1" && option !== "2" && option !== "3" && option !== "4") {
+                console.log("Wrong option. Please enter 1, 2, 3 or 4.");
             }
-        } while (option !== "1" && option !== "2" && option !== "3");
+        } while (option !== "1" && option !== "2" && option !== "3" && option !== "4");
         if (option === "1") {
             yield addUser();
         }
@@ -27,6 +27,16 @@ export function promptUser() {
             while (!deleted) {
                 console.log("No user found with that name.");
                 deleted = yield deleteUser();
+            }
+        }
+        else if (option === "3") {
+            let updated = yield updateUser();
+            while (!updated) {
+                console.log("No user found with that name.");
+                const retry = yield question("User not found. Try again? (y/n): ");
+                if (retry.toLowerCase() !== "y")
+                    break;
+                updated = yield updateUser();
             }
         }
         else {

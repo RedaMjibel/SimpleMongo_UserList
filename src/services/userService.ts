@@ -64,3 +64,58 @@ export async function deleteUser() {
   return deletedUser !== null;
 
 }
+export async function updateUser() {
+  let name = "";
+  let error: string | null;
+  while (true) {
+    name = await question("Enter username: ");
+    error = validateName(name);
+
+    if (error) {
+      console.log(error);
+      continue;
+    }
+
+    break;
+  }
+
+  let updatedName = "";
+
+  while (true) {
+    updatedName = await question("Enter new username: ");
+    error = validateName(updatedName);
+
+    if (error) {
+      console.log(error);
+      continue;
+    }
+
+    break;
+  }
+  let updatedAge: number = 0;
+
+  while (true) {
+    const updatedAgeInput = await question("Enter new user age: ");
+    updatedAge = parseInt(updatedAgeInput);
+
+    if (isNaN(updatedAge) || updatedAge <= 0 || updatedAge >= 150) {
+      console.log("Invalid age. Enter a number between 1 and 149.");
+      continue;
+    }
+
+    break;
+  }
+
+  const updatedUser = await UserModel.findOneAndUpdate(
+    { name },
+    { name: updatedName, age: updatedAge },
+    { returnDocument: "after" }
+  );
+
+  if (!updatedUser) {
+    return false;
+  }
+
+  console.log("User updated!\n");
+  return true;
+}
