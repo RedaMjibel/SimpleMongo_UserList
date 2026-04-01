@@ -1,15 +1,15 @@
 import mongoose from "mongoose";
 import readline from "readline";
 
-/* This is a simple Node.js application using TypeScript and Mongoose to show the interaction 
-between the application and the MongoDB database. */
+/* This is a simple Node.js application using TypeScript and Mongoose to show the interaction between the application and the MongoDB database. */
 
 type User = {
-    id: number;
-    name: string;
-    age: number;
-    status: string;
+  id: number;
+  name: string;
+  age: number;
+  status: string;
 };
+
 let option: string = "";
 
 async function connectDB() {
@@ -21,7 +21,7 @@ async function connectDB() {
   }
 }
 
-  const userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   name: String,
   age: Number,
   status: String
@@ -60,6 +60,7 @@ async function addUser(): Promise<void> {
   } while (isNaN(age) || age <= 0);
 
   let status: string;
+
   if (age <= 25) status = "young";
   else if (age <= 60) status = "old";
   else status = "senior";
@@ -122,21 +123,34 @@ async function PrintUsers(): Promise<void> {
   }
 }
 
+function setupGlobalExit() {
+  process.stdin.setRawMode(true);
+  process.stdin.resume();
+
+  process.stdin.on("data", async (key) => {
+    if (key[0] === 27) {
+      console.log("\nClosing connection...");
+
+      await mongoose.connection.close();
+      rl.close();
+      process.exit(0);
+    }
+  });
+}
+
+
 async function main() {
   await connectDB();
+
+  setupGlobalExit(); 
 
   while (true) {
     await promptUser();
     await PrintUsers();
 
-    const input = await question("Press ENTER to continue or type 'exit': ");
-
-    if (input.toLowerCase() === "exit") break;
+    console.log("\nPress ENTER to continue or ESC anytime to exit...");
+    await question(""); 
   }
-
-  await mongoose.connection.close();
-  rl.close();
-  process.exit(0);
 }
 
 main();

@@ -110,19 +110,28 @@ function PrintUsers() {
         }
     });
 }
+function setupGlobalExit() {
+    process.stdin.setRawMode(true);
+    process.stdin.resume();
+    process.stdin.on("data", (key) => __awaiter(this, void 0, void 0, function* () {
+        if (key[0] === 27) {
+            console.log("\nClosing connection...");
+            yield mongoose.connection.close();
+            rl.close();
+            process.exit(0);
+        }
+    }));
+}
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         yield connectDB();
+        setupGlobalExit(); // 🔥 ESC works anytime
         while (true) {
             yield promptUser();
             yield PrintUsers();
-            const input = yield question("Press ENTER to continue or type 'exit': ");
-            if (input.toLowerCase() === "exit")
-                break;
+            console.log("\nPress ENTER to continue or ESC anytime to exit...");
+            yield question(""); // just wait for Enter
         }
-        yield mongoose.connection.close();
-        rl.close();
-        process.exit(0);
     });
 }
 main();
