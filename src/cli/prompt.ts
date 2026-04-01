@@ -16,7 +16,11 @@ export async function promptUser() {
   if (option === "1") {
     await addUser();
   } else  if (option === "2") {
-    await deleteUser();
+    let deleted = await deleteUser();
+    while (!deleted) {
+      console.log("No user found with that name.");
+      deleted = await deleteUser();
+    }
   } else {
     await printUsers();
   }

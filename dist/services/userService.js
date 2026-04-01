@@ -58,8 +58,9 @@ export function deleteUser() {
                 continue;
             }
         } while (!name.trim() || error);
-        yield UserModel.findOneAndDelete({ name });
-        console.log("User deleted!");
+        const deletedUser = yield UserModel.findOneAndDelete({ name });
+        console.log("User deleted!\n");
+        return deletedUser !== null;
     });
 }
 //# sourceMappingURL=userService.js.map

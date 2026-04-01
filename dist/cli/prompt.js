@@ -23,7 +23,11 @@ export function promptUser() {
             yield addUser();
         }
         else if (option === "2") {
-            yield deleteUser();
+            let deleted = yield deleteUser();
+            while (!deleted) {
+                console.log("No user found with that name.");
+                deleted = yield deleteUser();
+            }
         }
         else {
             yield printUsers();

@@ -59,7 +59,8 @@ export async function deleteUser() {
   }
   } while (!name.trim() || error);
 
-  await UserModel.findOneAndDelete({ name });
+  const deletedUser = await UserModel.findOneAndDelete({ name });
+      console.log("User deleted!\n");
+  return deletedUser !== null;
 
-  console.log("User deleted!");
 }
