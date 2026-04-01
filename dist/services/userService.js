@@ -48,11 +48,17 @@ export function addUser() {
 }
 export function deleteUser() {
     return __awaiter(this, void 0, void 0, function* () {
-        let id = "";
+        let name = "";
+        let error;
         do {
-            id = yield question("Enter user ID: ");
-        } while (!id.trim());
-        yield UserModel.findByIdAndDelete(id);
+            name = yield question("Enter username: ");
+            error = validateName(name);
+            if (error) {
+                console.log(error);
+                continue;
+            }
+        } while (!name.trim() || error);
+        yield UserModel.findOneAndDelete({ name });
         console.log("User deleted!");
     });
 }

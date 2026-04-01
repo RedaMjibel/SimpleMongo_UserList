@@ -47,13 +47,19 @@ while (true) {
 }
 
 export async function deleteUser() {
-  let id = "";
+  let name = "";
+  let error: string | null;
 
   do {
-    id = await question("Enter user ID: ");
-  } while (!id.trim());
+    name = await question("Enter username: ");
+    error = validateName(name);
+    if (error) {
+    console.log(error);
+    continue;
+  }
+  } while (!name.trim() || error);
 
-  await UserModel.findByIdAndDelete(id);
+  await UserModel.findOneAndDelete({ name });
 
   console.log("User deleted!");
 }

@@ -9,20 +9,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { question } from "./input.js";
 import { addUser, deleteUser } from "../services/userService.js";
+import { printUsers } from "../ui/printUsers.js";
 export function promptUser() {
     return __awaiter(this, void 0, void 0, function* () {
         let option = "";
         do {
-            option = yield question("1 to create user, 2 to delete user: ");
-            if (option !== "1" && option !== "2") {
-                console.log("Wrong option. Please enter 1 or 2.");
+            option = yield question("1 to create user, 2 to delete user, 3 to print users: ");
+            if (option !== "1" && option !== "2" && option !== "3") {
+                console.log("Wrong option. Please enter 1, 2 or 3.");
             }
-        } while (option !== "1" && option !== "2");
+        } while (option !== "1" && option !== "2" && option !== "3");
         if (option === "1") {
             yield addUser();
         }
-        else {
+        else if (option === "2") {
             yield deleteUser();
+        }
+        else {
+            yield printUsers();
         }
     });
 }
