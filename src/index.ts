@@ -1,7 +1,6 @@
 import { connectDB } from "./db/connectDB.js";
 import { setupGlobalExit } from "./cli/exit.js";
 import { promptUser } from "./cli/prompt.js";
-import { printUsers } from "./ui/printUsers.js";
 import { question } from "./cli/input.js";
 
 async function main() {

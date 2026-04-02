@@ -6,6 +6,6 @@ export async function printUsers() {
   console.log("Current Users:");
 
   users.forEach((u) => {
-    console.log(`ID: ${u._id}, Name: ${u.name}, Age: ${u.age}, Status: ${u.status}`);
+    console.log(`Name: ${u.name}, Age: ${u.age}, Status: ${u.status}`);
   });
 }

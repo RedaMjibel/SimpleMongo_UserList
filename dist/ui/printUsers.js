@@ -13,7 +13,7 @@ export function printUsers() {
         const users = yield UserModel.find();
         console.log("Current Users:");
         users.forEach((u) => {
-            console.log(`ID: ${u._id}, Name: ${u.name}, Age: ${u.age}, Status: ${u.status}`);
+            console.log(`Name: ${u.name}, Age: ${u.age}, Status: ${u.status}`);
         });
     });
 }

@@ -10,7 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { connectDB } from "./db/connectDB.js";
 import { setupGlobalExit } from "./cli/exit.js";
 import { promptUser } from "./cli/prompt.js";
-import { printUsers } from "./ui/printUsers.js";
 import { question } from "./cli/input.js";
 function main() {
     return __awaiter(this, void 0, void 0, function* () {

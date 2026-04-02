@@ -91,7 +91,7 @@ export function updateUser() {
             const updatedAgeInput = yield question("Enter new user age: ");
             updatedAge = parseInt(updatedAgeInput);
             if (isNaN(updatedAge) || updatedAge <= 0 || updatedAge >= 150) {
-                console.log("Invalid age. Enter a number between 1 and 149.");
+                console.log("Invalid age! Enter a number between 1 and 149.");
                 continue;
             }
             break;

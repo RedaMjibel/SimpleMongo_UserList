@@ -10,8 +10,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import mongoose from "mongoose";
 export function connectDB() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield mongoose.connect("mongodb://127.0.0.1:27017/testDB");
-        console.log("Connected to MongoDB");
+        try {
+            yield mongoose.connect("mongodb://127.0.0.1:27017/testDB");
+            console.log("Connected to MongoDB");
+        }
+        catch (err) {
+            const error = err;
+            console.error("Failed to connect to MongoDB:", error.message);
+            process.exit(1);
+        }
     });
 }
 //# sourceMappingURL=connectDB.js.map
