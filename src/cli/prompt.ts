@@ -1,6 +1,8 @@
 import { question } from "./input.js";
 import { addUser, deleteUser, updateUser } from "../services/userService.js";
 import { printUsers } from "../ui/printUsers.js";
+import { retryUpdate } from "./retryUpdate.js";
+import { retryDelete } from "./retryDelete.js";
 
 export async function promptUser() {
   let option = "";
@@ -17,19 +19,16 @@ export async function promptUser() {
     await addUser();
   } else  if (option === "2") {
     let deleted = await deleteUser();
+    const retry = await retryDelete(deleted);
+    if (retry) {
     while (!deleted) {
       console.log("No user found with that name.");
       deleted = await deleteUser();
     }
+  }
   } else if (option === "3") {
     let updated = await updateUser();
-    while (!updated) {
-      console.log("No user found with that name.");
-      const retry = await question("User not found. Try again? (y/n): ");
-
-    if (retry.toLowerCase() !== "y") break;
-      updated = await updateUser();
-    }
+    await retryUpdate(updated);
   } else {
     await printUsers();
   }

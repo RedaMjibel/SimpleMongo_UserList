@@ -59,7 +59,8 @@ export function deleteUser() {
             }
         } while (!name.trim() || error);
         const deletedUser = yield UserModel.findOneAndDelete({ name });
-        console.log("User deleted!\n");
+        if (deletedUser)
+            console.log("User deleted!\n");
         return deletedUser !== null;
     });
 }

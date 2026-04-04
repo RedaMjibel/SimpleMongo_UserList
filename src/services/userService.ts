@@ -3,6 +3,7 @@ import { question } from "../cli/input.js";
 import { validateName } from "./validateName.js";
 
 
+
 export async function addUser() {
   let name = "";
 let error: string | null;
@@ -60,6 +61,7 @@ export async function deleteUser() {
   } while (!name.trim() || error);
 
   const deletedUser = await UserModel.findOneAndDelete({ name });
+  if (deletedUser)
       console.log("User deleted!\n");
   return deletedUser !== null;
 
