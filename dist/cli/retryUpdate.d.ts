@@ -1,2 +1,2 @@
-export declare function retryUpdate(option: boolean): Promise<void>;
+export declare function retryUpdate(option: boolean): Promise<boolean>;
 //# sourceMappingURL=retryUpdate.d.ts.map

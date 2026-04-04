@@ -1,7 +1,7 @@
 import { question } from "./input.js";
-import { addUser, deleteUser, updateUser } from "../services/userService.js";
+import { updateUser } from "../services/userService.js";
 
-export async function retryUpdate(option: boolean): Promise<void> {
+export async function retryUpdate(option: boolean): Promise<boolean> {
     while (!option) {
       console.log("No user found with that name.");
       const retry = await question("User not found. Try again? (y/n): ");
@@ -10,4 +10,5 @@ export async function retryUpdate(option: boolean): Promise<void> {
       option = await updateUser();
     }
 
+    return option;
 }

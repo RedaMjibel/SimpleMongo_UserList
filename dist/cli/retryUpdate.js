@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { question } from "./input.js";
-import { addUser, deleteUser, updateUser } from "../services/userService.js";
+import { updateUser } from "../services/userService.js";
 export function retryUpdate(option) {
     return __awaiter(this, void 0, void 0, function* () {
         while (!option) {
@@ -18,6 +18,7 @@ export function retryUpdate(option) {
                 break;
             option = yield updateUser();
         }
+        return option;
     });
 }
 //# sourceMappingURL=retryUpdate.js.map
