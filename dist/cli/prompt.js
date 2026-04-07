@@ -27,12 +27,6 @@ export function promptUser() {
         else if (option === "2") {
             let deleted = yield deleteUser();
             const retry = yield retryDelete(deleted);
-            if (retry) {
-                while (!deleted) {
-                    console.log("No user found with that name.");
-                    deleted = yield deleteUser();
-                }
-            }
         }
         else if (option === "3") {
             let updated = yield updateUser();

@@ -12,7 +12,6 @@ import { updateUser } from "../services/userService.js";
 export function retryUpdate(option) {
     return __awaiter(this, void 0, void 0, function* () {
         while (!option) {
-            console.log("No user found with that name.");
             const retry = yield question("User not found. Try again? (y/n): ");
             if (retry.toLowerCase() !== "y")
                 break;

@@ -20,12 +20,6 @@ export async function promptUser() {
   } else  if (option === "2") {
     let deleted = await deleteUser();
     const retry = await retryDelete(deleted);
-    if (retry) {
-    while (!deleted) {
-      console.log("No user found with that name.");
-      deleted = await deleteUser();
-    }
-  }
   } else if (option === "3") {
     let updated = await updateUser();
     await retryUpdate(updated);
